@@ -98,14 +98,11 @@ city.addEventListener("keyup", function (e) {
 
 function getTimeFromDate(timestamp) {
   var theDate = new Date(timestamp * 1000);
-  //   dateString = theDate.toTimeString();
   let hour = theDate.getHours();
   let minute = theDate.getMinutes();
   let second = theDate.getSeconds();
   return `${hour}:${minute}:${second}`;
 }
-// console.log(getTimeFromDate(1698454941));
-// console.log(getTimeFromDate(1698496455));
 
 let sample = {
   cloud_pct: 5,
