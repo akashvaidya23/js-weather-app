@@ -96,6 +96,7 @@ const renderWeather = (weather, city_name) => {
   card_body.appendChild(br);
   // Max_temp
   let max_temp_img = document.createElement("img");
+  max_temp_img.style.marginTop = "20px";
   max_temp_img.src = "/images/max-temp.png";
   max_temp_img.width = "50";
   max_temp_img.height = "50";
@@ -107,6 +108,7 @@ const renderWeather = (weather, city_name) => {
 
   // Min_temp
   let min_temp_img = document.createElement("img");
+  min_temp_img.style.marginTop = "20px";
   min_temp_img.style.marginLeft = "85px";
   min_temp_img.src = "/images/min-temp.png";
   min_temp_img.width = "50";
