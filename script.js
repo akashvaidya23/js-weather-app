@@ -52,6 +52,13 @@ weather_form.addEventListener("submit", async function (e) {
 
 const renderWeather = (weather, city_name) => {
   let card = document.createElement("div");
+  let closeBtn = document.createElement("button");
+  closeBtn.style.width = "30px";
+  closeBtn.innerHTML = "&times;";
+  closeBtn.setAttribute("type", "button");
+  closeBtn.setAttribute("class", "btn btn-danger remove");
+  closeBtn.setAttribute("aria-label", "close");
+  card.appendChild(closeBtn);
   card.setAttribute("class", "card");
   let card_body = document.createElement("div");
   card_body.setAttribute("class", "card-body");
@@ -76,7 +83,7 @@ const renderWeather = (weather, city_name) => {
   // Sunset images
   let sunset_img = document.createElement("img");
   sunset_img.style.marginLeft = "25px";
-  sunset_img.src = "/images/sunrise.png";
+  sunset_img.src = "/images/sunset-2.png";
   sunset_img.width = "50";
   sunset_img.height = "50";
   let setTime = document.createElement("span");
@@ -84,6 +91,48 @@ const renderWeather = (weather, city_name) => {
   setTime.innerHTML = sunSet;
   card_body.appendChild(sunset_img);
   card_body.appendChild(setTime);
+
+  let br = document.createElement("br");
+  card_body.appendChild(br);
+  // Max_temp
+  let max_temp_img = document.createElement("img");
+  max_temp_img.src = "/images/max-temp.png";
+  max_temp_img.width = "50";
+  max_temp_img.height = "50";
+  let setMaxTemp = document.createElement("span");
+  let maxTemp = weather.max_temp;
+  setMaxTemp.innerHTML = maxTemp;
+  card_body.appendChild(max_temp_img);
+  card_body.appendChild(setMaxTemp);
+
+  // Min_temp
+  let min_temp_img = document.createElement("img");
+  min_temp_img.style.marginLeft = "85px";
+  min_temp_img.src = "/images/min-temp.png";
+  min_temp_img.width = "50";
+  min_temp_img.height = "50";
+  let setMinTemp = document.createElement("span");
+  let minTemp = weather.min_temp;
+  setMinTemp.innerHTML = minTemp;
+  card_body.appendChild(min_temp_img);
+  card_body.appendChild(setMinTemp);
+
+  // card_body.appendChild(br);
+  // Wind Speed
+  let wind_speed_div = document.createElement("div");
+  wind_speed_div.style.marginTop = "20px";
+  let wind_speed_img = document.createElement("img");
+  wind_speed_img.src = "/images/anemometer.png";
+  wind_speed_img.width = "50";
+  wind_speed_img.height = "50";
+  let setwind_speed = document.createElement("span");
+  let wind_speed = weather.wind_speed;
+  setwind_speed.innerHTML = wind_speed;
+  wind_speed_div.appendChild(wind_speed_img);
+  wind_speed_div.appendChild(setwind_speed);
+  card_body.appendChild(wind_speed_div);
+
+  // Wind Temperature
 };
 
 city.addEventListener("keyup", function (e) {
@@ -91,10 +140,7 @@ city.addEventListener("keyup", function (e) {
 });
 
 const getCurrentLocation = () => {
-  const location = navigator.geolocation.getCurrentPosition(
-    gotLocation,
-    failedToFetch
-  );
+  navigator.geolocation.getCurrentPosition(gotLocation, failedToFetch);
 };
 
 const gotLocation = async (position) => {
@@ -108,7 +154,6 @@ const gotLocation = async (position) => {
     position.coords.longitude
   );
   weather = JSON.parse(weather);
-  console.log(weather, city);
   renderWeather(weather, city);
 };
 
@@ -118,7 +163,6 @@ const failedToFetch = () => {
 
 const reverseGeocode = async (latitude, longitude) => {
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -132,11 +176,8 @@ const reverseGeocode = async (latitude, longitude) => {
 getCurrentLocation();
 
 function getTimeFromDate(timestamp) {
-  var theDate = new Date(timestamp * 1000);
-  let hour = theDate.getHours();
-  let minute = theDate.getMinutes();
-  let second = theDate.getSeconds();
-  return `${hour}:${minute}:${second}`;
+  var theDate = new Date(timestamp * 1000).toLocaleTimeString();
+  return theDate;
 }
 
 // let sample = {
