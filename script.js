@@ -34,30 +34,40 @@ let city_div = document.querySelector("#div_city");
 let weather_form = document.querySelector("#weather_form");
 let city_error = document.getElementsByClassName("city_error");
 let weather_cities = document.querySelector(".weather_cities");
+let cities = [];
+console.log(cities);
 
 weather_form.addEventListener("submit", async function (e) {
   e.preventDefault();
   let city_name = city.value;
-  if (!city_name) {
-    city_error[0].innerHTML = "Please enter a valid city";
+  console.log(cities.indexOf(city_name));
+  if (cities.indexOf(city_name) >= 0) {
+    city_error[0].innerHTML = `${city_name} already exists`;
     city_error[0].style.color = "red";
+    city_error[0].style.fontWeight = "bold";
   } else {
-    let weather = await fetchWeather("", "", city_name);
-    weather = JSON.parse(weather);
-    renderWeather(weather, city_name);
+    cities.push(city_name);
+    if (!city_name) {
+      city_error[0].innerHTML = "Please enter a valid city";
+      city_error[0].style.color = "red";
+    } else {
+      weather_cities.innerHTML = "";
+      let weather = await fetchWeather("", "", city_name);
+      weather = JSON.parse(weather);
+      cities.map((city) => {
+        renderWeather(weather, city);
+      });
+    }
   }
+  console.log(cities);
   city.value = null;
   city.focus();
 });
 
 const renderWeather = (weather, city_name) => {
   let card = document.createElement("div");
-  let closeBtn = document.createElement("button");
-  closeBtn.style.width = "30px";
-  closeBtn.innerHTML = "&times;";
-  closeBtn.setAttribute("type", "button");
-  closeBtn.setAttribute("class", "btn btn-danger remove");
-  closeBtn.setAttribute("aria-label", "close");
+  let closeBtn = document.createElement("span");
+  closeBtn.innerHTML = `<button class="remove" onclick = removeCity('${city_name}')>&times;</button>`;
   card.appendChild(closeBtn);
   card.setAttribute("class", "card");
   let card_body = document.createElement("div");
@@ -157,10 +167,15 @@ const gotLocation = async (position) => {
   );
   weather = JSON.parse(weather);
   renderWeather(weather, city);
+  cities.push(city);
+  console.log(cities);
 };
 
-const failedToFetch = () => {
-  console.log("Failed ");
+const failedToFetch = (err) => {
+  console.log("Failed ", err.code, err.message);
+  city_error[0].innerHTML = err.message;
+  city_error[0].style.color = "red";
+  city_error[0].style.fontWeight = "bold";
 };
 
 const reverseGeocode = async (latitude, longitude) => {
@@ -181,6 +196,18 @@ function getTimeFromDate(timestamp) {
   var theDate = new Date(timestamp * 1000).toLocaleTimeString();
   return theDate;
 }
+
+const removeCity = async (city_name) => {
+  console.log(city_name);
+  let index = cities.indexOf(city_name);
+  cities.splice(index, 1);
+  console.log(cities);
+  weather_cities.innerHTML = "";
+  let weather = await fetchWeather("", "", city_name);
+  cities.map((city) => {
+    renderWeather(weather, city);
+  });
+};
 
 // let sample = {
 //   cloud_pct: 5,

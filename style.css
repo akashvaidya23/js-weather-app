@@ -21,3 +21,12 @@
 .card {
   margin: 10px;
 }
+
+.remove {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
