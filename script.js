@@ -50,11 +50,12 @@ weather_form.addEventListener("submit", async function (e) {
     if (!city_name) {
       city_error[0].innerHTML = "Please enter a valid city";
       city_error[0].style.color = "red";
+      city_error[0].style.fontWeight = "bold";
     } else {
       weather_cities.innerHTML = "";
-      let weather = await fetchWeather("", "", city_name);
-      weather = JSON.parse(weather);
-      cities.map((city) => {
+      cities.map(async (city) => {
+        let weather = await fetchWeather("", "", city);
+        weather = JSON.parse(weather);
         renderWeather(weather, city);
       });
     }
@@ -67,7 +68,7 @@ weather_form.addEventListener("submit", async function (e) {
 const renderWeather = (weather, city_name) => {
   let card = document.createElement("div");
   let closeBtn = document.createElement("span");
-  closeBtn.innerHTML = `<button class="remove" onclick = removeCity('${city_name}')>&times;</button>`;
+  closeBtn.innerHTML = `<button class="remove" style="float:right" onclick = removeCity('${city_name}')>&times;</button>`;
   card.appendChild(closeBtn);
   card.setAttribute("class", "card");
   let card_body = document.createElement("div");
@@ -107,7 +108,7 @@ const renderWeather = (weather, city_name) => {
   // Max_temp
   let max_temp_img = document.createElement("img");
   max_temp_img.style.marginTop = "20px";
-  max_temp_img.src = "/images/max-temp.png";
+  max_temp_img.src = "/images/fever.png";
   max_temp_img.width = "50";
   max_temp_img.height = "50";
   let setMaxTemp = document.createElement("span");
@@ -120,7 +121,7 @@ const renderWeather = (weather, city_name) => {
   let min_temp_img = document.createElement("img");
   min_temp_img.style.marginTop = "20px";
   min_temp_img.style.marginLeft = "85px";
-  min_temp_img.src = "/images/min-temp.png";
+  min_temp_img.src = "/images/low-temperature.png";
   min_temp_img.width = "50";
   min_temp_img.height = "50";
   let setMinTemp = document.createElement("span");
@@ -197,27 +198,15 @@ function getTimeFromDate(timestamp) {
   return theDate;
 }
 
-const removeCity = async (city_name) => {
+const removeCity = (city_name) => {
   console.log(city_name);
   let index = cities.indexOf(city_name);
   cities.splice(index, 1);
   console.log(cities);
   weather_cities.innerHTML = "";
-  let weather = await fetchWeather("", "", city_name);
-  cities.map((city) => {
+  cities.map(async (city) => {
+    let weather = await fetchWeather("", "", city);
+    weather = JSON.parse(weather);
     renderWeather(weather, city);
   });
 };
-
-// let sample = {
-//   cloud_pct: 5,
-//   temp: 24,
-//   feels_like: 24,
-//   humidity: 39,
-//   min_temp: 24,
-//   max_temp: 24,
-//   wind_speed: 0.89,
-//   wind_degrees: 283,
-//   sunrise: 1698454941,
-//   sunset: 1698496455,
-// };
