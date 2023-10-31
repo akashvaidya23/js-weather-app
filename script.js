@@ -1,5 +1,3 @@
-const url =
-  "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=Mumbai";
 const options = {
   method: "GET",
   headers: {
@@ -53,11 +51,15 @@ weather_form.addEventListener("submit", async function (e) {
       city_error[0].style.fontWeight = "bold";
     } else {
       weather_cities.innerHTML = "";
-      cities.map(async (city) => {
-        let weather = await fetchWeather("", "", city);
-        weather = JSON.parse(weather);
+      for (const city of cities) {
+        const response = await fetch(
+          `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
+          options
+        );
+        const weather = await response.json();
+        console.log(city, weather);
         renderWeather(weather, city);
-      });
+      }
     }
   }
   console.log(cities);
@@ -198,15 +200,19 @@ function getTimeFromDate(timestamp) {
   return theDate;
 }
 
-const removeCity = (city_name) => {
+const removeCity = async (city_name) => {
   console.log(city_name);
   let index = cities.indexOf(city_name);
   cities.splice(index, 1);
   console.log(cities);
   weather_cities.innerHTML = "";
-  cities.map(async (city) => {
-    let weather = await fetchWeather("", "", city);
-    weather = JSON.parse(weather);
+  for (const city of cities) {
+    const response = await fetch(
+      `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
+      options
+    );
+    const weather = await response.json();
+    console.log(city, weather);
     renderWeather(weather, city);
-  });
+  }
 };
