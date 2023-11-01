@@ -39,3 +39,7 @@ body {
   overflow: hidden;
   outline: none;
 }
+
+.checked {
+  color: orange;
+}

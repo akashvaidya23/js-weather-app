@@ -33,6 +33,7 @@ let weather_form = document.querySelector("#weather_form");
 let city_error = document.getElementsByClassName("city_error");
 let weather_cities = document.querySelector(".weather_cities");
 let cities = [];
+let starMarked = [];
 console.log(cities);
 
 weather_form.addEventListener("submit", async function (e) {
@@ -44,34 +45,53 @@ weather_form.addEventListener("submit", async function (e) {
     city_error[0].style.color = "red";
     city_error[0].style.fontWeight = "bold";
   } else {
-    cities.push(city_name);
     if (!city_name) {
       city_error[0].innerHTML = "Please enter a valid city";
       city_error[0].style.color = "red";
       city_error[0].style.fontWeight = "bold";
     } else {
+      cities.push(city_name);
+      city.value = null;
+      city.focus();
       weather_cities.innerHTML = "";
       for (const city of cities) {
-        const response = await fetch(
-          `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
-          options
-        );
-        const weather = await response.json();
-        console.log(city, weather);
-        renderWeather(weather, city);
+        try {
+          const response = await fetch(
+            `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
+            options
+          );
+          const weather = await response.json();
+          console.log(city, weather);
+          renderWeather(weather, city);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   }
   console.log(cities);
-  city.value = null;
-  city.focus();
 });
 
 const renderWeather = (weather, city_name) => {
   let card = document.createElement("div");
+  let actionDiv = document.createElement("div");
   let closeBtn = document.createElement("span");
   closeBtn.innerHTML = `<button class="remove" style="float:right" onclick = removeCity('${city_name}')>&times;</button>`;
-  card.appendChild(closeBtn);
+  actionDiv.appendChild(closeBtn);
+
+  const star = document.createElement("span");
+  console.log(starMarked.indexOf(city_name));
+  if (starMarked.indexOf(city_name) != -1) {
+    star.setAttribute("class", "fa fa-star checked");
+  } else {
+    star.setAttribute("class", "fa fa-star");
+  }
+  star.setAttribute("onclick", `starMark('${city_name}')`);
+  // star.innerHTML = `<span class="fa fa-star"></span>`;
+  card.appendChild(star);
+  actionDiv.appendChild(star);
+
+  card.appendChild(actionDiv);
   card.setAttribute("class", "card");
   let card_body = document.createElement("div");
   card_body.setAttribute("class", "card-body");
@@ -216,3 +236,23 @@ const removeCity = async (city_name) => {
     renderWeather(weather, city);
   }
 };
+
+async function starMark(city) {
+  console.log(city);
+  if (starMarked.indexOf(city) == -1) {
+    starMarked.push(city);
+  } else {
+    starMarked.splice(starMarked.indexOf(city), 1);
+  }
+  weather_cities.innerHTML = "";
+  console.log("starMarked ", starMarked);
+  for (const city of cities) {
+    const response = await fetch(
+      `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
+      options
+    );
+    const weather = await response.json();
+    // console.log(city, weather);
+    renderWeather(weather, city);
+  }
+}
