@@ -23,7 +23,7 @@ const fetchWeather = async (latitude, longitude, city) => {
     const result = await response.text();
     return result;
   } catch (error) {
-    console.error(error);
+    console.error("Error in fetching weather ", error);
   }
 };
 
@@ -34,7 +34,6 @@ let city_error = document.getElementsByClassName("city_error");
 let weather_cities = document.querySelector(".weather_cities");
 let cities = [];
 let starMarked = [];
-console.log(cities);
 
 weather_form.addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -61,7 +60,7 @@ weather_form.addEventListener("submit", async function (e) {
             options
           );
           const weather = await response.json();
-          console.log(city, weather);
+          // console.log(city, weather);
           renderWeather(weather, city);
         } catch (error) {
           console.log(error);
@@ -221,10 +220,8 @@ function getTimeFromDate(timestamp) {
 }
 
 const removeCity = async (city_name) => {
-  console.log(city_name);
   let index = cities.indexOf(city_name);
   cities.splice(index, 1);
-  console.log(cities);
   weather_cities.innerHTML = "";
   for (const city of cities) {
     const response = await fetch(
@@ -232,27 +229,23 @@ const removeCity = async (city_name) => {
       options
     );
     const weather = await response.json();
-    console.log(city, weather);
     renderWeather(weather, city);
   }
 };
 
 async function starMark(city) {
-  console.log(city);
   if (starMarked.indexOf(city) == -1) {
     starMarked.push(city);
   } else {
     starMarked.splice(starMarked.indexOf(city), 1);
   }
   weather_cities.innerHTML = "";
-  console.log("starMarked ", starMarked);
   for (const city of cities) {
     const response = await fetch(
       `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`,
       options
     );
     const weather = await response.json();
-    // console.log(city, weather);
     renderWeather(weather, city);
   }
 }
