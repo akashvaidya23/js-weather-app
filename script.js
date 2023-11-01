@@ -83,13 +83,13 @@ const renderWeather = (cities) => {
     closeBtn.innerHTML = `<button class="remove" style="float:right" onclick = removeCity('${index}')>&times;</button>`;
     actionDiv.appendChild(closeBtn);
     const star = document.createElement("span");
-    star.setAttribute("class", "fa fa-star");
     if (starMarked.indexOf(city.city_name) != -1) {
       star.setAttribute("class", "fa fa-star checked");
     } else {
       star.setAttribute("class", "fa fa-star");
     }
     star.setAttribute("onclick", `starMark('${city.city_name}')`);
+    star.style.marginLeft = "5px";
     card.appendChild(star);
     actionDiv.appendChild(star);
     card.appendChild(actionDiv);
