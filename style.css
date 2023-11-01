@@ -17,7 +17,7 @@ body {
 }
 
 .weather_cities {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -42,4 +42,17 @@ body {
 
 .checked {
   color: orange;
+}
+
+.card-body {
+  padding-top: 0px;
+}
+
+#Loading {
+  display: block;
+  margin: 13px auto 0px auto;
+}
+
+.weather_city_div {
+  align-items: center;
 }
