@@ -46,6 +46,7 @@ weather_form.addEventListener("submit", async function (e) {
 
   if (!city_name) {
     validation_error("Please enter a valid city");
+    loading.style.display = "none";
   } else {
     if (new_city) {
       let data = {};
@@ -64,6 +65,7 @@ weather_form.addEventListener("submit", async function (e) {
           city.value = null;
         } else {
           validation_error("Please enter a valid city");
+          loading.style.display = "none";
         }
         loading.style.display = "none";
         city.focus();
@@ -93,7 +95,13 @@ const renderWeather = (cities) => {
     card.appendChild(star);
     actionDiv.appendChild(star);
     card.appendChild(actionDiv);
-    card.setAttribute("class", "card");
+    if (city.weather.temp <= 20) {
+      card.setAttribute("class", "card-cold");
+    } else if (city.weather.temp > 20) {
+      card.setAttribute("class", "card-worm");
+    } else if (city.weather.temp > 40) {
+      card.setAttribute("class", "card-hot");
+    }
     let card_body = document.createElement("div");
     card_body.setAttribute("class", "card-body");
     let h5 = document.createElement("h5");
@@ -197,6 +205,7 @@ const failedToFetch = (err) => {
   city_error[0].innerHTML = err.message;
   city_error[0].style.color = "red";
   city_error[0].style.fontWeight = "bold";
+  loading.style.display = "none";
 };
 
 const reverseGeocode = async (latitude, longitude) => {
