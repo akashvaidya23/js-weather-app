@@ -13,7 +13,7 @@ let city_error = document.getElementsByClassName("city_error");
 let weather_cities = document.querySelector(".weather_cities");
 let loading = document.querySelector("#Loading");
 let cities = [];
-let starMarked = [];
+let starMarked = JSON.parse(localStorage.getItem("star_marked_cities")) || [];
 
 const fetchWeather = async (latitude, longitude) => {
   try {
@@ -156,7 +156,6 @@ const renderWeather = (cities) => {
     setMinTemp.innerHTML = minTemp;
     card_body.appendChild(min_temp_img);
     card_body.appendChild(setMinTemp);
-    // card_body.appendChild(br);
     // Wind Speed
     let wind_speed_div = document.createElement("div");
     wind_speed_div.style.marginTop = "20px";
@@ -197,15 +196,38 @@ const gotLocation = async (position) => {
   data.city_name = city;
   data.weather = weather;
   cities.push(data);
+  await getStarMarkedCitiesWeather();
   renderWeather(cities);
   loading.style.display = "none";
 };
 
-const failedToFetch = (err) => {
+const failedToFetch = async (err) => {
   city_error[0].innerHTML = err.message;
   city_error[0].style.color = "red";
   city_error[0].style.fontWeight = "bold";
   loading.style.display = "none";
+  await getStarMarkedCitiesWeather();
+  renderWeather(cities);
+};
+
+const getStarMarkedCitiesWeather = async () => {
+  let star_marked_cities = JSON.parse(
+    localStorage.getItem("star_marked_cities")
+  );
+  if (star_marked_cities) {
+    for (const city_name of star_marked_cities) {
+      let data1 = {};
+      data1.city_name = city_name;
+      const response = await fetch(
+        `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city_name}`,
+        options
+      );
+      const weather = await response.json();
+      data1.weather = weather;
+      cities.push(data1);
+    }
+  }
+  return cities;
 };
 
 const reverseGeocode = async (latitude, longitude) => {
@@ -228,11 +250,10 @@ function getTimeFromDate(timestamp) {
 }
 
 const removeCity = (index) => {
-  console.log(starMarked, index, cities[index].city_name);
-  console.log(starMarked.indexOf(cities[index].city_name));
   starMarked.splice(starMarked.indexOf(cities[index].city_name), 1);
   cities.splice(index, 1);
   weather_cities.innerHTML = "";
+  localStorage.setItem("star_marked_cities", starMarked);
   renderWeather(cities);
 };
 
@@ -242,6 +263,7 @@ const starMark = (city) => {
   } else {
     starMarked.splice(starMarked.indexOf(city), 1);
   }
+  localStorage.setItem("star_marked_cities", JSON.stringify(starMarked));
   renderWeather(cities);
 };
 
