@@ -14,6 +14,7 @@ let weather_cities = document.querySelector(".weather_cities");
 let loading = document.querySelector("#Loading");
 let cities = [];
 let starMarked = JSON.parse(localStorage.getItem("star_marked_cities")) || [];
+let current_city = "";
 
 const fetchWeather = async (latitude, longitude) => {
   try {
@@ -193,6 +194,7 @@ const gotLocation = async (position) => {
   );
   weather = JSON.parse(weather);
   let data = {};
+  current_city = city;
   data.city_name = city;
   data.weather = weather;
   cities.push(data);
@@ -211,20 +213,21 @@ const failedToFetch = async (err) => {
 };
 
 const getStarMarkedCitiesWeather = async () => {
-  let star_marked_cities = JSON.parse(
-    localStorage.getItem("star_marked_cities")
-  );
-  if (star_marked_cities) {
-    for (const city_name of star_marked_cities) {
-      let data1 = {};
-      data1.city_name = city_name;
-      const response = await fetch(
-        `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city_name}`,
-        options
-      );
-      const weather = await response.json();
-      data1.weather = weather;
-      cities.push(data1);
+  console.log(cities);
+  console.log(starMarked, current_city);
+  if (starMarked) {
+    for (const city_name of starMarked) {
+      if (city_name != current_city) {
+        let data1 = {};
+        data1.city_name = city_name;
+        const response = await fetch(
+          `https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city_name}`,
+          options
+        );
+        const weather = await response.json();
+        data1.weather = weather;
+        cities.push(data1);
+      }
     }
   }
   return cities;
@@ -253,7 +256,8 @@ const removeCity = (index) => {
   starMarked.splice(starMarked.indexOf(cities[index].city_name), 1);
   cities.splice(index, 1);
   weather_cities.innerHTML = "";
-  localStorage.setItem("star_marked_cities", starMarked);
+  console.log(starMarked);
+  localStorage.setItem("star_marked_cities", JSON.stringify(starMarked));
   renderWeather(cities);
 };
 
