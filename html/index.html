@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Check Weather</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar bg-dark" data-bs-theme="dark">
+      <nav class="nav">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="nav-link" id="check_weather" aria-current="page" href="#"
+          >Check Weather</a
+        >
+        <a class="nav-link" id="starmarked_places" href="#"
+          >Star Marked Places</a
+        >
+      </nav>
+    </nav>
+
+    <form id="weather_form" type="submit">
+      <div class="mb-3" id="div_city">
+        <label for="city" class="form-label">Enter your City</label>
+        <input
+          type="text"
+          class="form-control"
+          id="city_input"
+          aria-describedby="emailHelp"
+        />
+        <span class="city_error"></span>
+      </div>
+      <button type="submit" class="btn btn-primary" id="search_city">
+        Check
+      </button>
+    </form>
+
+    <img
+      id="Loading"
+      src="../images/Shark_arrows.gif"
+      height="20"
+      width="20"
+      alt="GIF"
+    />
+    <div class="weather_cities"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/script.js"></script>
+  </body>
+</html>
