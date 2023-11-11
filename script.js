@@ -13,7 +13,7 @@ let city_error = document.getElementsByClassName("city_error");
 let weather_cities = document.querySelector(".weather_cities");
 let loading = document.querySelector("#Loading");
 let cities = [];
-let starMarked = JSON.parse(localStorage.getItem("star_marked_cities")) || [];
+let starMarked = JSON.parse(localStorage.getItem("star_marked_cities")) ?? [];
 let current_city = "";
 
 const fetchWeather = async (latitude, longitude) => {
@@ -71,6 +71,7 @@ weather_form.addEventListener("submit", async function (e) {
         loading.style.display = "none";
         city.focus();
       } catch (error) {
+        console.log(error);
         loading.innerHTML = "Something went wrong";
       }
     }
@@ -192,6 +193,7 @@ const gotLocation = async (position) => {
     position.coords.latitude,
     position.coords.longitude
   );
+  console.log("city ", city);
   weather = JSON.parse(weather);
   let data = {};
   current_city = city;
@@ -213,8 +215,8 @@ const failedToFetch = async (err) => {
 };
 
 const getStarMarkedCitiesWeather = async () => {
-  console.log(cities);
-  console.log(starMarked, current_city);
+  // console.log(cities);
+  // console.log(starMarked, current_city);
   if (starMarked) {
     for (const city_name of starMarked) {
       if (city_name != current_city) {
