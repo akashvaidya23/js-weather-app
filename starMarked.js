@@ -193,9 +193,9 @@ const starMark = (city) => {
 };
 
 star_marked_page.addEventListener("click", function (e) {
-  window.location.href = "../html/starmarked.html";
+  window.location.href = "./starmarked.html";
 });
 
 check_weather.addEventListener("click", function (e) {
-  window.location.href = "../html/index.html";
+  window.location.href = "./index.html";
 });
